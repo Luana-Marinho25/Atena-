@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+       body {
+      font-family: Arial, sans-serif;
+      background-image: url(imagem/Espaço2);
+      background-size: cover;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #000000;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #000000;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+    }
+
+    .form-button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(145deg,#B3CFE5, #6867a8, #6867a8);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .form-button:hover {
+      background-color: #3b3f9c;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+      color: #000000;
+    }
+
+    .login-link a {
+      color: #4e54c8;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgb(255, 255, 255);
+      color: #444;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      padding: 10px;
+      text-decoration: none;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .google-btn img {
+      width: 20px;
+      margin-right: 10px;
+    }
+
+    .google-btn:hover {
+      background-color: #f7f7f7;
+    }
+  </style>
+</head>
+<body>
+  
+
+  <div class="form-container">
+    <h2>Cadastro</h2>
+    <form id="cadastroForm">
+      <div class="form-group">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="nome" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmar">Confirmar senha</label>
+        <input type="password" id="confirmar" name="confirmar" required>
+      </div>
+
+      <button type="submit" class="form-button">Cadastrar</button>
+    </form>
+
+    <a href="#" class="google-btn">
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" />
+      Continuar com Google
+    </a>
+
+    <div class="login-link">
+      Já tem uma conta?<br><br> <a href="Login.html">Entrar</a>
+    </div>
+  </div>
+
+  <script>
+    // ============================
+    // SCRIPT DE CADASTRO + SALVAR DADOS
+    // ============================
+
+    document.getElementById('cadastroForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const senha = document.getElementById('senha').value.trim();
+      const confirmar = document.getElementById('confirmar').value.trim();
+
+      // Verifica se senhas coincidem
+      if (senha !== confirmar) {
+        alert("As senhas não coincidem!");
+        return;
+      }
+
+      // Armazena os dados do usuário no localStorage
+      localStorage.setItem('userName', nome);
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userPhoto', 'imagem/macaco.jpg'); // você pode mudar a imagem padrão
+
+      // Redireciona para a página da conta
+      alert("Cadastro realizado com sucesso!");
+      window.location.href = "Login.html"; // substitua pelo nome da sua página de conta
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+
+  <title>Projeto PRIT</title>
+  <style>
+    /* Imagem */
+    .about-section img {
+      width: 100%;
+      max-width: 900px;
+      height: 900px;
+      border-radius: 12px;
+      display: block;
+    }
+ 
+    /* Título sobre a imagem */
+    .about-section h1 {
+      position: absolute;
+      top: 400px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6); /* fundo preto semi-transparente */
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 2.8rem;
+      font-weight: bold;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #1B1145, #1B1145);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+ 
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(33,150,243,0.3);
+}
+ 
+.question {
+  display: none;
+  border: none;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+ 
+.question.active {
+  display: block;
+  animation: aparecer 0.5s ease;
+}
+ 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #f9fafb;
+  border: 2px solid #e0e0e0;
+  transition: all 0.25s ease;
+  font-size: 15px;
+}
+ 
+/* bolinha do radio customizada */
+.question input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+ 
+/* bolinha interna quando selecionado */
+.question input:checked {
+  border-color: #1B1145;
+  background-color: #1B1145;
+}
+ 
+.question input:checked::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+ 
+/* hover bonito */
+.question label:hover {
+ 
+  background: #8762c48e;
+  border-color: #1b1145;
+  transform: scale(1.01);
+}
+ 
+/* selecionado */
+.question label:has(input:checked) {
+  border-color: #1B1145;
+  background: #e3f2fd;
+}
+ 
+label.certa {
+  background-color: #c8e6c9 !important;
+  border: 2px solid #4caf50;
+}
+ 
+label.errada {
+  background-color: #ffcdd2 !important;
+  border: 2px solid #f44336;
+}
+ 
+#resultado {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+ 
+.hero {
+  position: relative;
+  max-width: 900px;
+  margin: 100px auto 50px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+ 
+.hero-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+ 
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 150px;
+  width: 500px;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+ 
+details summary::marker {
+  content: '';
+}
+.question {
+  display: none;
+}
+ 
+.question.active {
+  display: block;
+}
+#feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* Quando aparece */
+#feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+ 
+/* Certo */
+#feedback.certo {
+  background: linear-gradient(135deg, #c8e6c9, #81c784);
+  color: #1b5e20;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+}
+ 
+/* Errado */
+#feedback.errado {
+  background: linear-gradient(135deg, #ffcdd2, #e57373);
+  color: #b71c1c;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+}
+.explicacao {
+  display: none;
+  margin-top: 15px;
+  padding: 15px 20px;
+  border-left: 6px solid #4CAF50;
+  background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+  border-radius: 10px;
+  font-style: normal;
+  color: #2e7d32;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* quando aparece */
+.explicacao.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+  </style>
+</head>
+<body>
+ 
+  <header class="navbar">
+
+    <a href="#" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="#">Histórico</a></li>
+            <li><a href="#">Guia</a></li>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+  <details style="max-width: 1400px; margin: 100px auto 50px; background-color: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+    <summary style="cursor: pointer;">
+      <section class="hero">
+        <img src="CriseDosMisseisDeCuba.webp" alt="Guerra do Vietnã" class="hero-image">
+        <h1 class="hero-text">Crise dos mísseis em Cuba</h1>
+      </section>
+    </summary>
+ 
+    <form style="margin-top: 30px;">
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 2rem; color: #333;">
+Questionário - Crise dos mísseis em Cuba
+</h2>
+ 
+      <!-- Cada questão -->
+       <fieldset class="question">
+<legend>1) Quais eram as principais potências envolvidas na Crise dos Mísseis?</legend>
+
+<label>
+<input type="radio" name="q1" value="a">
+<span>a) Rússia e Estados Unidos.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="b">
+<span>b) Rússia e Grã-Bretanha.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="c">
+<span>c) Grã-Bretanha e Cuba.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q1" value="d">
+<span>d) Estados Unidos e União Soviética.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="e">
+<span>e) Cuba e Estados Unidos.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A Crise dos Mísseis foi um dos momentos mais tensos da Guerra Fria e envolveu principalmente os Estados Unidos e a União Soviética. Cuba teve papel central por abrigar os mísseis soviéticos, mas as negociações ocorreram entre as duas superpotências.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>2) A Crise dos Mísseis teve início quando...</legend>
+
+<label class="correta">
+<input type="radio" name="q2" value="a">
+<span>a) O presidente dos Estados Unidos, John F. Kennedy, foi informado da existência de mísseis soviéticos instalados em Cuba.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="b">
+<span>b) A indústria bélica de Cuba teve um avanço acelerado, causando preocupação ao governo americano devido à proximidade com seu território.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="c">
+<span>c) O exército americano foi informado sobre os planos do exército cubano e sua alta tecnologia balística.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="d">
+<span>d) Agentes do governo cubano roubaram protótipos de mísseis e ogivas americanas.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="e">
+<span>e) O presidente John F. Kennedy recebeu uma proposta para produzir mísseis destinados a Cuba.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A crise começou em outubro de 1962, quando aviões espiões dos Estados Unidos identificaram bases de lançamento de mísseis nucleares soviéticos em Cuba. A descoberta levou os dois países a um momento de extrema tensão, com risco de guerra nuclear.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>3) O que colocou fim à Crise dos Mísseis?</legend>
+
+<label>
+<input type="radio" name="q3" value="a">
+<span>a) John F. Kennedy utilizou seu poder militar para estabelecer um bloqueio naval que forçou a retirada imediata da população cubana.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="b">
+<span>b) Com o avanço bélico de Cuba, o país conseguiu defender os mísseis com sucesso.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="c">
+<span>c) A vitória militar dos Estados Unidos em solo cubano garantiu a destruição das bases.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q3" value="d">
+<span>d) Um acordo estabelecido entre os Estados Unidos e a União Soviética.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="e">
+<span>e) A União Soviética enviou reforços para Cuba, garantindo a proteção dos mísseis.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A crise terminou por meio de um acordo diplomático entre os Estados Unidos e a União Soviética. A URSS concordou em retirar os mísseis de Cuba, enquanto os Estados Unidos prometeram não invadir a ilha e, posteriormente, retiraram seus mísseis instalados na Turquia.
+</p>
+</fieldset>
+
+   <button type="button" id="responderBtn" style="margin-top: 20px;">Responder</button>
+<button type="button" id="continuarBtn" style="margin-top: 10px; display:none;">Continuar</button>
+<p id="feedback" style="font-weight:bold; margin-top:10px;"></p>
+ 
+<span style="display:block; margin-top:10px; font-weight:bold;"></span>
+ 
+<div id="finalQuiz" style="display:none; text-align:center; margin-top:50px; padding:40px; background: linear-gradient(135deg, #f9f9f9, #e0f7fa); border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width:600px; margin-left:auto; margin-right:auto;">
+  <h2 style="font-size:2.5rem; color:#00796b; margin-bottom:20px;">🎉 Parabéns! 🎉</h2>
+  <p id="pontuacaoFinal" style="font-size:1.2rem; color:#004d40; margin-bottom:30px;">
+   Você concluiu o questionário sobre a <strong>Crise dos mísseis em Cuba</strong>! 👏
+  </p>
+   <button
+    type="button"
+    onclick="window.location.href='inicio.html'"
+    style="padding:15px 30px; font-size:1.2rem; background: linear-gradient(135deg, #BF40FA, #4928C2); color:white; border:none; border-radius:12px; cursor:pointer; transition: all 0.3s ease; font-weight:bold;">
+    Voltar à página inicial
+</button>
+  </a>
+</div>
+ 
+</form>
+   
+ 
+ 
+<div id="resultado"></div>
+ 
+<script>
+let perguntaAtual = 0;
+
+function atualizarProgresso(){
+
+    const total = perguntas.length;
+    const atual = perguntaAtual + 1;
+
+    const porcentagem = (atual / total) * 100;
+
+    document.querySelectorAll(".progress-circle").forEach(c=>{
+        c.style.setProperty("--progress", porcentagem);
+    });
+
+    document.querySelectorAll("#contador").forEach(c=>{
+        c.textContent = `${atual}/${total}`;
+    });
+
+    document.querySelectorAll("#questaoAtual").forEach(c=>{
+        c.textContent = atual;
+    });
+
+}
+
+
+
+let acertos = 0; // Contador de acertos
+let primeiraTentativa = true; // Para saber se é a primeira tentativa
+ 
+const perguntas = document.querySelectorAll('.question');
+const responderBtn = document.getElementById('responderBtn');
+const continuarBtn = document.getElementById('continuarBtn');
+const feedback = document.getElementById('feedback');
+const finalQuiz = document.getElementById('finalQuiz');
+const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+ 
+perguntas[0].classList.add('active');
+ 
+function checarSelecao() {
+  const selecionada = perguntas[perguntaAtual].querySelector('input:checked');
+  responderBtn.disabled = !selecionada;
+}
+ 
+function adicionarListenerOpcoes() {
+  const inputs = perguntas[perguntaAtual].querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('change', checarSelecao);
+  });
+}
+ 
+adicionarListenerOpcoes();
+ 
+responderBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+  const correta = pergunta.querySelector('label.correta input');
+  const selecionada = pergunta.querySelector('input:checked');
+  const explicacao = pergunta.querySelector('.explicacao');
+ 
+  if (!selecionada) return;
+ 
+  feedback.classList.remove('certo', 'errado', 'show');
+ 
+  if (selecionada === correta) {
+    feedback.textContent = "🎉 Boa! Você acertou!";
+    feedback.classList.add('certo', 'show');
+    explicacao.classList.add('show');
+    continuarBtn.style.display = "inline-block";
+    responderBtn.style.display = "none";
+ 
+    if (primeiraTentativa) {
+      acertos++; // Só conta se acertou na primeira tentativa
+    }
+  } else {
+    feedback.textContent = "😅 Opa! Tente novamente.";
+    feedback.classList.add('errado', 'show');
+    primeiraTentativa = false; // Marca que a primeira tentativa foi errada
+  }
+});
+ 
+continuarBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+ 
+  // Limpa classes visuais
+  pergunta.querySelectorAll('label').forEach(label => label.classList.remove('certa', 'errada'));
+ 
+  const explicacao = pergunta.querySelector('.explicacao');
+  if (explicacao) explicacao.classList.remove('show');
+ 
+  pergunta.querySelectorAll('input').forEach(input => input.checked = false);
+  pergunta.classList.remove('active');
+  perguntaAtual++;
+ 
+  // Reseta primeiraTentativa para a próxima pergunta
+  primeiraTentativa = true;
+ 
+  if (perguntaAtual < perguntas.length) {
+    perguntas[perguntaAtual].classList.add('active');
+    responderBtn.style.display = "inline-block";
+    continuarBtn.style.display = "none";
+    feedback.textContent = "";
+    adicionarListenerOpcoes();
+  } else {
+  // Fim do quiz
+  feedback.style.display = "none";
+  responderBtn.style.display = "none";
+  continuarBtn.style.display = "none";
+ 
+  pontuacaoFinal.innerHTML = `Você acertou <strong>${acertos}</strong> de <strong>${perguntas.length}</strong> perguntas de primeira! 👏`;
+ 
+  finalQuiz.style.display = "block";
+ 
+  // ✅ SALVAR NO HISTÓRICO
+  const nomeUsuario = "Atena"; // depois você pode puxar do login
+  const temaFormulario = "Peste Negra"; // muda conforme a página
+ 
+  const dataAtual = new Date();
+  const data = dataAtual.toLocaleDateString();
+  const horario = dataAtual.toLocaleTimeString();
+ 
+  const formulario = {
+    nome: nomeUsuario,
+    temaFormulario: temaFormulario,
+    data: data,
+    horario: horario,
+    acertos: acertos,
+    totalQuestoes: perguntas.length
+  };
+ 
+  let historico = JSON.parse(localStorage.getItem('formularios')) || [];
+  historico.push(formulario);
+  localStorage.setItem('formularios', JSON.stringify(historico));
+ 
+  console.log("✅ Resultado salvo no histórico:", formulario);
+}
+});
+</script>
+ 
+</body>
+</html>
+ 
+ 

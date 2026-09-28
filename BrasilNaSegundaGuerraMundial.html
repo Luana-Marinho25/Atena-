@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+
+  <title>Projeto PRIT</title>
+  <style>
+    /* Imagem */
+    .about-section img {
+      width: 100%;
+      max-width: 900px;
+      height: 900px;
+      border-radius: 12px;
+      display: block;
+    }
+ 
+    /* Título sobre a imagem */
+    .about-section h1 {
+      position: absolute;
+      top: 400px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6); /* fundo preto semi-transparente */
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 2.8rem;
+      font-weight: bold;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #1B1145, #1B1145);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+ 
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(33,150,243,0.3);
+}
+ 
+.question {
+  display: none;
+  border: none;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+ 
+.question.active {
+  display: block;
+  animation: aparecer 0.5s ease;
+}
+ 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #f9fafb;
+  border: 2px solid #e0e0e0;
+  transition: all 0.25s ease;
+  font-size: 15px;
+}
+ 
+/* bolinha do radio customizada */
+.question input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+ 
+/* bolinha interna quando selecionado */
+.question input:checked {
+  border-color: #1B1145;
+  background-color: #1B1145;
+}
+ 
+.question input:checked::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+ 
+/* hover bonito */
+.question label:hover {
+ 
+  background: #8762c48e;
+  border-color: #1b1145;
+  transform: scale(1.01);
+}
+ 
+/* selecionado */
+.question label:has(input:checked) {
+  border-color: #1B1145;
+  background: #e3f2fd;
+}
+ 
+label.certa {
+  background-color: #c8e6c9 !important;
+  border: 2px solid #4caf50;
+}
+ 
+label.errada {
+  background-color: #ffcdd2 !important;
+  border: 2px solid #f44336;
+}
+ 
+#resultado {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+ 
+.hero {
+  position: relative;
+  max-width: 900px;
+  margin: 100px auto 50px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+ 
+.hero-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+ 
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 150px;
+  width: 500px;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+ 
+details summary::marker {
+  content: '';
+}
+.question {
+  display: none;
+}
+ 
+.question.active {
+  display: block;
+}
+#feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* Quando aparece */
+#feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+ 
+/* Certo */
+#feedback.certo {
+  background: linear-gradient(135deg, #c8e6c9, #81c784);
+  color: #1b5e20;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+}
+ 
+/* Errado */
+#feedback.errado {
+  background: linear-gradient(135deg, #ffcdd2, #e57373);
+  color: #b71c1c;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+}
+.explicacao {
+  display: none;
+  margin-top: 15px;
+  padding: 15px 20px;
+  border-left: 6px solid #4CAF50;
+  background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+  border-radius: 10px;
+  font-style: normal;
+  color: #2e7d32;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* quando aparece */
+.explicacao.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+  </style>
+</head>
+<body>
+ 
+  <header class="navbar">
+
+    <a href="#" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="#">Histórico</a></li>
+            <li><a href="#">Guia</a></li>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+  <details style="max-width: 900px; margin: 150px auto 50px; background-color: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+    <summary style="cursor: pointer;">
+      <section class="hero">
+        <img src="BrasilNaSegundaGuerraMundial.jpg" alt="Brasil na Segunda Guerra Mundial" class="hero-image">
+        <h1 class="hero-text">Brasil na Segunda Guerra Mundial</h1>
+      </section>
+    </summary>
+ 
+    <form style="margin-top: 30px;">
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 2rem; color: #333;">Questionário - Brasil na Segunda Guerra Mundial</h2>
+ 
+      <!-- Cada questão -->
+     <fieldset class="question">
+<legend>1)O Brasil declarou guerra contra o Eixo após... </legend>
+ 
+  <label>
+<input type="radio" name="q1" value="a">
+<span>a) A existência dos campos de concentração serem publicamente divulgadas </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q1" value="b">
+<span>b) Após um acordo com os Estados Unidos </span>
+</label>
+ 
+ <label class="correta">
+<input type="radio" name="q1" value="c">
+<span>c) Após o afundamento de navios mercantis por submarinos alemães</span>
+</label>
+
+
+  <label>
+<input type="radio" name="q1" value="d">
+<span>d) Após o ataque da base de Pear Harbour pelo Japão </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q1" value="e">
+<span>e) Devido a Itália ter quebrado acordos com o Brasil e ter fornecidos armamento para o Eixo </span>
+</label>
+ 
+  <p class="explicacao">
+  💡 <strong>Explicação:</strong><br><br>
+  O Brasil declarou guerra à Alemanha e à Itália em agosto de 1942 após submarinos alemães afundarem diversos navios mercantes brasileiros, provocando centenas de mortes e forte pressão da população para que o país entrasse na guerra ao lado dos Aliados.
+</p>
+</fieldset>
+ 
+<fieldset class="question">
+<legend>2) “Sob o comando do General Mascarenhas de Moraes, cerca de ...  homens (e um grupo de enfermeiras) foram enviados a partir de 1944 para a ..., incorporando-se ao 5º Exército dos EUA.” Assinale a alternativa que melhor preenche as lacunas do enunciado: </legend>
+ 
+  <label>
+<input type="radio" name="q2" value="a">
+<span>a) 50.000 - Alemanha </span>
+</label>
+ 
+ 
+  <label>
+<input type="radio" name="q2" value="b">
+<span>b) 25.445 - Alemanha </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q2" value="c">
+<span>c) 30.759 - Itália </span>
+</label>
+ 
+<label class="correta">
+<input type="radio" name="q2" value="d">
+<span>d) 25.445 - Itália </span>
+</label>
+
+
+  <label>
+<input type="radio" name="q2" value="e">
+<span>e) 30.759 - Rússia </span>
+</label>
+ 
+ <p class="explicacao">
+  💡 <strong>Explicação:</strong><br><br>
+  A Força Expedicionária Brasileira (FEB) enviou 25.445 militares para lutar na Campanha da Itália. Sob o comando do General João Baptista Mascarenhas de Moraes, a FEB integrou o 5º Exército dos Estados Unidos.
+</p>
+</fieldset>
+ 
+<fieldset class="question">
+<legend>3) A FEB teve papel crucial na Campanha da Itália, garantindo posição estratégica de: </legend>
+ 
+  <label>
+<input type="radio" name="q3" value="a">
+<span>a) Viena </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q3" value="b">
+<span>b) Florença </span>
+</label>
+ 
+
+  <label class="correta">
+<input type="radio" name="q3" value="c">
+<span>c) Monte Castello  </span>
+</label>
+
+
+  <label>
+<input type="radio" name="q3" value="d">
+<span>d) Dolomitas </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q3" value="e">
+<span>e) Costa Amalfitana </span>
+</label>
+ 
+ <p class="explicacao">
+  💡 <strong>Explicação:</strong><br><br>
+  Monte Castello era uma posição fortemente defendida pelas tropas alemãs. Após várias tentativas, a FEB conquistou a região em fevereiro de 1945, contribuindo para o avanço das forças aliadas na Itália.
+</p>
+</fieldset>
+ 
+<fieldset class="question">
+<legend>4) Quem era o presidente do Brasil quando foi declarado guerra ao Eixo? </legend>
+ 
+  <label>
+<input type="radio" name="q4" value="a">
+<span>a) João Goulart </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q4" value="b">
+<span>b) Eurico Gaspar Dutra </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q4" value="c">
+<span>c) Castelo Branco </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q4" value="d">
+<span>d) Jânio Quadros </span>
+</label>
+
+ <label class="correta">
+<input type="radio" name="q4" value="e">
+<span>e) Getúlio Vargas  </span>
+</label>
+ 
+ <p class="explicacao">
+  💡 <strong>Explicação:</strong><br><br>
+  Getúlio Vargas era o presidente do Brasil durante a Segunda Guerra Mundial. Em seu governo, o Brasil declarou guerra às potências do Eixo e organizou o envio da FEB e da FAB para combater na Itália.
+</p>
+</fieldset>
+ 
+<fieldset class="question">
+<legend>5) O Brasil enviou a... </legend>
+ 
+  <label>
+<input type="radio" name="q5" value="a">
+<span>a) Força Aérea Brasileira (FAB) e Fuzileiros Navais </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q5" value="b">
+<span>b) Infantaria e Artilharia </span>
+</label>
+
+  <label class="correta">
+<input type="radio" name="q5" value="d">
+<span>c) Força Expedicionária Brasileira (FEB) e a Força Aérea Brasileira (FAB)  </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q5" value="c">
+<span>d) Força Expedicionária Brasileira (FEB) e a Infantaria </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q5" value="e">
+<span>e) Fuzileiros Navais e Aviação Naval </span>
+</label>
+
+ <p class="explicacao">
+  💡 <strong>Explicação:</strong><br><br>
+  O Brasil participou da guerra enviando a Força Expedicionária Brasileira (FEB), responsável pelas operações terrestres, e a Força Aérea Brasileira (FAB), que realizou missões de apoio e combate durante a Campanha da Itália.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>6) A Base Aérea de Natal (BANT) compartilhava o mesmo aeródromo com a Base Americana chamada de “Parnamirim Field”, que era uma das maiores bases aéreas dos Estados Unidos fora do território americano. Era conhecida como “Trampolim da Vitória” pelas Forças Aliadas pois... </legend>
+ 
+  <label>
+<input type="radio" name="q6" value="a">
+<span>a) era o local com maior concentração de aeronaves modernas do Brasil, fornecidas pelos Estados Unidos após o Brasil declarar guerra contra o Eixo </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q6" value="b">
+<span>b) era uma posição estratégica para combater os submarinos nazistas que bombardeavam cargueiros americanos </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q6" value="c">
+<span>c) era considerado a representação física da aliança entre os Estados Unidos e o Brasil </span>
+</label>
+ 
+  <label>
+<input type="radio" name="q6" value="dd">
+<span>d) era um local de treinamento para paraquedistas  </span>
+</label>
+
+ <label class="correta">
+<input type="radio" name="q6" value="e">
+<span>e) era um ponto de passagem para as aeronaves americanas que decolavam diariamente para combater na Europa e na África</span>
+</label>
+ 
+  <p class="explicacao">
+  💡 <strong>Explicação:</strong><br><br>
+  A Base Aérea de Natal, conhecida como Parnamirim Field, ficou famosa como "Trampolim da Vitória" porque sua localização facilitava a travessia do Oceano Atlântico. Ela foi um importante ponto de apoio para o envio de aeronaves, tropas e suprimentos das Forças Aliadas rumo à África e à Europa.
+</p>
+</fieldset>
+
+
+
+
+   
+   <button type="button" id="responderBtn" style="margin-top: 20px;">Responder</button>
+<button type="button" id="continuarBtn" style="margin-top: 10px; display:none;">Continuar</button>
+<p id="feedback" style="font-weight:bold; margin-top:10px;"></p>
+ 
+<span id="feedback" style="display:block; margin-top:10px; font-weight:bold;"></span>
+ 
+<div id="finalQuiz" style="display:none; text-align:center; margin-top:50px; padding:40px; background: linear-gradient(135deg, #f9f9f9, #e0f7fa); border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width:600px; margin-left:auto; margin-right:auto;">
+  <h2 style="font-size:2.5rem; color:#00796b; margin-bottom:20px;">🎉 Parabéns! 🎉</h2>
+  <p id="pontuacaoFinal" style="font-size:1.2rem; color:#004d40; margin-bottom:30px;">
+    Você concluiu o questionário sobre o <strong>Brasil na Segunda Guerra Mundial</strong>! 👏
+  </p>
+   <button
+    type="button"
+    onclick="window.location.href='inicio.html'"
+    style="padding:15px 30px; font-size:1.2rem; background: linear-gradient(135deg, #BF40FA, #4928C2); color:white; border:none; border-radius:12px; cursor:pointer; transition: all 0.3s ease; font-weight:bold;">
+    Voltar à página inicial
+</button>
+  </a>
+</div>
+ 
+</form>
+   
+ 
+ 
+<div id="resultado"></div>
+ 
+<script>
+let perguntaAtual = 0;
+let acertos = 0; // Contador de acertos
+let primeiraTentativa = true; // Para saber se é a primeira tentativa
+ 
+const perguntas = document.querySelectorAll('.question');
+const responderBtn = document.getElementById('responderBtn');
+const continuarBtn = document.getElementById('continuarBtn');
+const feedback = document.getElementById('feedback');
+const finalQuiz = document.getElementById('finalQuiz');
+const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+ 
+perguntas[0].classList.add('active');
+ 
+function checarSelecao() {
+  const selecionada = perguntas[perguntaAtual].querySelector('input:checked');
+  responderBtn.disabled = !selecionada;
+}
+ 
+function adicionarListenerOpcoes() {
+  const inputs = perguntas[perguntaAtual].querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('change', checarSelecao);
+  });
+}
+ 
+adicionarListenerOpcoes();
+ 
+responderBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+  const correta = pergunta.querySelector('label.correta input');
+  const selecionada = pergunta.querySelector('input:checked');
+  const explicacao = pergunta.querySelector('.explicacao');
+ 
+  if (!selecionada) return;
+ 
+  feedback.classList.remove('certo', 'errado', 'show');
+ 
+  if (selecionada === correta) {
+    feedback.textContent = "🎉 Boa! Você acertou!";
+    feedback.classList.add('certo', 'show');
+    explicacao.classList.add('show');
+    continuarBtn.style.display = "inline-block";
+    responderBtn.style.display = "none";
+ 
+    if (primeiraTentativa) {
+      acertos++; // Só conta se acertou na primeira tentativa
+    }
+  } else {
+    feedback.textContent = "😅 Opa! Tente novamente.";
+    feedback.classList.add('errado', 'show');
+    primeiraTentativa = false; // Marca que a primeira tentativa foi errada
+  }
+});
+ 
+continuarBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+ 
+  // Limpa classes visuais
+  pergunta.querySelectorAll('label').forEach(label => label.classList.remove('certa', 'errada'));
+ 
+  const explicacao = pergunta.querySelector('.explicacao');
+  if (explicacao) explicacao.classList.remove('show');
+ 
+  pergunta.querySelectorAll('input').forEach(input => input.checked = false);
+  pergunta.classList.remove('active');
+  perguntaAtual++;
+ 
+  // Reseta primeiraTentativa para a próxima pergunta
+  primeiraTentativa = true;
+ 
+  if (perguntaAtual < perguntas.length) {
+    perguntas[perguntaAtual].classList.add('active');
+    responderBtn.style.display = "inline-block";
+    continuarBtn.style.display = "none";
+    feedback.textContent = "";
+    adicionarListenerOpcoes();
+  } else {
+  // Fim do quiz
+  feedback.style.display = "none";
+  responderBtn.style.display = "none";
+  continuarBtn.style.display = "none";
+ 
+  pontuacaoFinal.innerHTML = `Você acertou <strong>${acertos}</strong> de <strong>${perguntas.length}</strong> perguntas de primeira! 👏`;
+ 
+  finalQuiz.style.display = "block";
+ 
+  // ✅ SALVAR NO HISTÓRICO
+  const nomeUsuario = "Atena"; // depois você pode puxar do login
+  const temaFormulario = "Bomba Atômica"; // muda conforme a página
+ 
+  const dataAtual = new Date();
+  const data = dataAtual.toLocaleDateString();
+  const horario = dataAtual.toLocaleTimeString();
+ 
+  const formulario = {
+    nome: nomeUsuario,
+    temaFormulario: temaFormulario,
+    data: data,
+    horario: horario,
+    acertos: acertos,
+    totalQuestoes: perguntas.length
+  };
+ 
+  let historico = JSON.parse(localStorage.getItem('formularios')) || [];
+  historico.push(formulario);
+  localStorage.setItem('formularios', JSON.stringify(historico));
+ 
+  console.log("✅ Resultado salvo no histórico:", formulario);
+}
+});
+</script>
+ 
+</body>
+</html>
+ 
+ 

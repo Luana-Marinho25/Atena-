@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linha do Tempo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<style>
+    *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background: linear-gradient(#210736, #440c4b, #7b347e);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:50px;
+    color:#f9f4f5;
+}
+
+.timeline{
+    position:relative;
+    max-width:1000px;
+    margin:auto;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:0;
+    width:4px;
+    height:100%;
+    background:#6867a8;
+    transform:translateX(-50%);
+}
+
+.evento{
+    position:relative;
+    width:50%;
+    padding:20px 40px;
+}
+
+.evento:nth-child(odd){
+    left:0;
+    text-align:right;
+}
+
+.evento:nth-child(even){
+    left:50%;
+}
+
+.evento::before{
+    content:"";
+    position:absolute;
+    top:35px;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#6867a8;
+    border:4px solid white;
+    box-shadow:0 0 0 3px #6867a8;
+}
+
+.evento:nth-child(odd)::before{
+    right:-13px;
+}
+
+.evento:nth-child(even)::before{
+    left:-13px;
+}
+
+.conteudo:hover{
+    transform:translateY(-6px);
+}
+
+.data{
+    display:inline-block;
+    margin-bottom:10px;
+    color:#6867a8;
+    font-weight:bold;
+    font-size: large;
+}
+
+@media(max-width:768px){
+
+.timeline::before{
+    left:20px;
+}
+
+.evento{
+    width:100%;
+    left:0 !important;
+    padding-left:60px;
+    padding-right:20px;
+    text-align:left;
+}
+
+.evento::before{
+    left:11px !important;
+}
+
+}
+</style>
+<body>
+     <header class="navbar">
+
+    <a href="inicio.html" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="historico.html">Histórico</a></li>
+            <li><a href="Guia.html">Guia</a></li>
+            <li><a href="perfil.html">Perfil</a></li>
+            <li><a href="contato.html">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+   <br><br>
+<h1>Linha do Tempo</h1>
+
+<div class="timeline" id="timeline">
+
+    <div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1347-1351</span>
+             <div class="card">
+
+            <img src="pesteNegra.webp">
+
+            <div class="card-body">
+
+               <a href="PesteNegra.html"><h3>Peste Negra</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+    <div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1789</span>
+             <div class="card">
+
+            <img src="RevolucaoFrancesa.jpg">
+
+            <div class="card-body">
+
+               <a href="RevolucaoFrancesa.html"><h3>Revolução Francesa</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+    <div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1922</span>
+             <div class="card">
+
+            <img src="UniaoSovietica.png">
+
+            <div class="card-body">
+
+               <a href="UniaoSovietica.html"><h3>União Soviética</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+
+    <div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1942-1945</span>
+             <div class="card">
+
+            <img src="BrasilNaSegundaGuerraMundial.jpg">
+
+            <div class="card-body">
+
+               <a href="BrasilNaSegundaGuerraMundial.html"><h3>Brasil na Segunda Guerra Mundial</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+<div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1945</span>
+             <div class="card">
+
+            <img src="bombaAtomica.jpg">
+
+            <div class="card-body">
+
+               <a href="BombaAtomica.html"><h3>Bomba Atômica</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+    <div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1955-1975</span>
+             <div class="card">
+
+            <img src="GuerraDoVietna.webp">
+
+            <div class="card-body">
+
+               <a href="GuerraDoVietna.html"><h3>Guerra do Vietnâ</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+    <div class="evento" data-data="2024-05-20">
+        <div class="conteudo">
+            <span class="data">1962</span>
+             <div class="card">
+
+            <img src="CriseDosMisseisDeCuba.webp">
+
+            <div class="card-body">
+
+               <a href="CriseDosMisseisDeCuba.html"><h3>Crise dos Mísseis de Cuba</h3></a>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+ <footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-logo">
+            <h2>ATENA</h2>
+            <p>Aprendendo História de forma interativa.</p>
+        </div>
+
+        <div class="footer-links">
+            <h3>Navegação</h3>
+            <a href="inicio.html">Início</a>
+            <a href="historico.html">historico</a>
+            <a href="Guia.html">Guia</a>
+            <a href="contato.html">Contato</a>
+        </div>
+
+        <div class="footer-info">
+            <h3>Projeto</h3>
+            <p>Plataforma educacional voltada ao ensino de História.</p>
+            <p>© 2025 ATENA</p>
+        </div>
+
+    </div>
+</footer>
+
+
+</body>
+</html>

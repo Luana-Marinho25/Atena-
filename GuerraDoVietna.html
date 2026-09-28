@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+
+  <title>Projeto PRIT</title>
+  <style>
+    /* Imagem */
+    .about-section img {
+      width: 100%;
+      max-width: 900px;
+      height: 900px;
+      border-radius: 12px;
+      display: block;
+    }
+ 
+    /* Título sobre a imagem */
+    .about-section h1 {
+      position: absolute;
+      top: 400px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6); /* fundo preto semi-transparente */
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 2.8rem;
+      font-weight: bold;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #1B1145, #1B1145);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+ 
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(33,150,243,0.3);
+}
+ 
+.question {
+  display: none;
+  border: none;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+ 
+.question.active {
+  display: block;
+  animation: aparecer 0.5s ease;
+}
+ 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #f9fafb;
+  border: 2px solid #e0e0e0;
+  transition: all 0.25s ease;
+  font-size: 15px;
+}
+ 
+/* bolinha do radio customizada */
+.question input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+ 
+/* bolinha interna quando selecionado */
+.question input:checked {
+  border-color: #1B1145;
+  background-color: #1B1145;
+}
+ 
+.question input:checked::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+ 
+/* hover bonito */
+.question label:hover {
+ 
+  background: #8762c48e;
+  border-color: #1b1145;
+  transform: scale(1.01);
+}
+ 
+/* selecionado */
+.question label:has(input:checked) {
+  border-color: #1B1145;
+  background: #e3f2fd;
+}
+ 
+label.certa {
+  background-color: #c8e6c9 !important;
+  border: 2px solid #4caf50;
+}
+ 
+label.errada {
+  background-color: #ffcdd2 !important;
+  border: 2px solid #f44336;
+}
+ 
+#resultado {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+ 
+.hero {
+  position: relative;
+  max-width: 900px;
+  margin: 100px auto 50px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+ 
+.hero-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+ 
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 150px;
+  width: 500px;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+ 
+details summary::marker {
+  content: '';
+}
+.question {
+  display: none;
+}
+ 
+.question.active {
+  display: block;
+}
+#feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* Quando aparece */
+#feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+ 
+/* Certo */
+#feedback.certo {
+  background: linear-gradient(135deg, #c8e6c9, #81c784);
+  color: #1b5e20;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+}
+ 
+/* Errado */
+#feedback.errado {
+  background: linear-gradient(135deg, #ffcdd2, #e57373);
+  color: #b71c1c;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+}
+.explicacao {
+  display: none;
+  margin-top: 15px;
+  padding: 15px 20px;
+  border-left: 6px solid #4CAF50;
+  background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+  border-radius: 10px;
+  font-style: normal;
+  color: #2e7d32;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* quando aparece */
+.explicacao.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+  </style>
+</head>
+<body>
+ 
+  <header class="navbar">
+
+    <a href="#" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="#">Histórico</a></li>
+            <li><a href="#">Guia</a></li>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+  <details style="max-width: 1400px; margin: 100px auto 50px; background-color: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+    <summary style="cursor: pointer;">
+      <section class="hero">
+        <img src="GuerraDoVietna.webp" alt="Guerra do Vietnã" class="hero-image">
+        <h1 class="hero-text">Guerra do Vietnã</h1>
+      </section>
+    </summary>
+ 
+    <form style="margin-top: 30px;">
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 2rem; color: #333;">
+Questionário - Guerra do Vietnã
+</h2>
+ 
+      <!-- Cada questão -->
+<fieldset class="question">
+<legend>1) A Guerra do Vietnã está inserida em qual contexto histórico?</legend>
+
+<label>
+<input type="radio" name="q1" value="a">
+<span>a) Primeira Guerra Mundial.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="b">
+<span>b) Segunda Guerra Mundial.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q1" value="c">
+<span>c) Guerra Fria.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="d">
+<span>d) Revolução Iraniana.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="e">
+<span>e) Guerra do Golfo.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A Guerra do Vietnã ocorreu durante a Guerra Fria e refletiu a disputa entre os blocos capitalista e socialista. Os Estados Unidos apoiaram o Vietnã do Sul, enquanto o Vietnã do Norte recebeu apoio de países comunistas, como a União Soviética e a China.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>2) O conflito teve como causas principais a disputa ideológica entre:</legend>
+
+<label>
+<input type="radio" name="q2" value="a">
+<span>a) Aliados e Eixo.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q2" value="b">
+<span>b) Capitalismo e comunismo.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="c">
+<span>c) Anarquismo e nacionalismo.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="d">
+<span>d) Ludismo e tecnofobia.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="e">
+<span>e) Governo democrático e governo ditatorial.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A Guerra do Vietnã foi marcada pela disputa entre o capitalismo, representado pelos Estados Unidos e seus aliados, e o comunismo, defendido pelo Vietnã do Norte com o apoio da União Soviética e da China.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>3) Quais foram alguns dos principais crimes de guerra cometidos durante a Guerra do Vietnã?</legend>
+
+<label>
+<input type="radio" name="q3" value="a">
+<span>a) Ataques a alvos militares, uso de armas químicas e massacre de civis.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="b">
+<span>b) Tortura e assassinato de prisioneiros, espionagem e operações de inteligência.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="c">
+<span>c) Massacre de civis, prisão de combatentes e cerco militar.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="d">
+<span>d) Cerco militar, tortura e assassinato de prisioneiros e uso de armas químicas.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q3" value="e">
+<span>e) Massacre de civis, uso de armas químicas, tortura e assassinato de prisioneiros.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+Durante a Guerra do Vietnã foram registrados diversos crimes de guerra, como massacres de civis, tortura de prisioneiros e o uso de agentes químicos, como o Agente Laranja, que causou graves impactos ambientais e à saúde da população.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>4) A Guerra do Vietnã ocorreu entre:</legend>
+
+<label class="correta">
+<input type="radio" name="q4" value="a">
+<span>a) 1955 e 1975.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="b">
+<span>b) 1975 e 1984.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="c">
+<span>c) 1945 e 1984.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="d">
+<span>d) 1970 e 1990.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="e">
+<span>e) 1439 e 1945.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A Guerra do Vietnã aconteceu entre 1955 e 1975 e terminou com a vitória do Vietnã do Norte, levando à reunificação do país sob um governo comunista.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>5) Quais foram os principais fatores para a derrota dos Estados Unidos na Guerra do Vietnã?</legend>
+
+<label>
+<input type="radio" name="q5" value="a">
+<span>a) Desistência do governo americano após seu sucesso em outros conflitos da Guerra Fria.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="b">
+<span>b) Penalizações impostas pela ONU pelos crimes de guerra cometidos.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="c">
+<span>c) A grande baixa de soldados e a ausência de novos recrutas.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="d">
+<span>d) Falta de recursos, em oposição à grande artilharia do Vietnã do Norte.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q5" value="e">
+<span>e) A capacidade de resistência do Vietnã do Norte, baseada em táticas de guerrilha, apoio popular e uso eficiente do ambiente geográfico.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A vitória do Vietnã do Norte foi favorecida pelo uso de táticas de guerrilha, pelo conhecimento do terreno, pelo apoio de parte da população e pela dificuldade dos Estados Unidos em combater um inimigo adaptado ao ambiente local.
+</p>
+</fieldset>   
+
+
+   <button type="button" id="responderBtn" style="margin-top: 20px;">Responder</button>
+<button type="button" id="continuarBtn" style="margin-top: 10px; display:none;">Continuar</button>
+<p id="feedback" style="font-weight:bold; margin-top:10px;"></p>
+ 
+<span style="display:block; margin-top:10px; font-weight:bold;"></span>
+ 
+<div id="finalQuiz" style="display:none; text-align:center; margin-top:50px; padding:40px; background: linear-gradient(135deg, #f9f9f9, #e0f7fa); border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width:600px; margin-left:auto; margin-right:auto;">
+  <h2 style="font-size:2.5rem; color:#00796b; margin-bottom:20px;">🎉 Parabéns! 🎉</h2>
+  <p id="pontuacaoFinal" style="font-size:1.2rem; color:#004d40; margin-bottom:30px;">
+   Você concluiu o questionário sobre a <strong>Guerra do Vietnã</strong>! 👏
+  </p>
+   <button
+    type="button"
+    onclick="window.location.href='inicio.html'"
+    style="padding:15px 30px; font-size:1.2rem; background: linear-gradient(135deg, #BF40FA, #4928C2); color:white; border:none; border-radius:12px; cursor:pointer; transition: all 0.3s ease; font-weight:bold;">
+    Voltar à página inicial
+</button>
+  </a>
+</div>
+ 
+</form>
+   
+ 
+ 
+<div id="resultado"></div>
+ 
+<script>
+let perguntaAtual = 0;
+
+function atualizarProgresso(){
+
+    const total = perguntas.length;
+    const atual = perguntaAtual + 1;
+
+    const porcentagem = (atual / total) * 100;
+
+    document.querySelectorAll(".progress-circle").forEach(c=>{
+        c.style.setProperty("--progress", porcentagem);
+    });
+
+    document.querySelectorAll("#contador").forEach(c=>{
+        c.textContent = `${atual}/${total}`;
+    });
+
+    document.querySelectorAll("#questaoAtual").forEach(c=>{
+        c.textContent = atual;
+    });
+
+}
+
+
+
+let acertos = 0; // Contador de acertos
+let primeiraTentativa = true; // Para saber se é a primeira tentativa
+ 
+const perguntas = document.querySelectorAll('.question');
+const responderBtn = document.getElementById('responderBtn');
+const continuarBtn = document.getElementById('continuarBtn');
+const feedback = document.getElementById('feedback');
+const finalQuiz = document.getElementById('finalQuiz');
+const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+ 
+perguntas[0].classList.add('active');
+ 
+function checarSelecao() {
+  const selecionada = perguntas[perguntaAtual].querySelector('input:checked');
+  responderBtn.disabled = !selecionada;
+}
+ 
+function adicionarListenerOpcoes() {
+  const inputs = perguntas[perguntaAtual].querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('change', checarSelecao);
+  });
+}
+ 
+adicionarListenerOpcoes();
+ 
+responderBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+  const correta = pergunta.querySelector('label.correta input');
+  const selecionada = pergunta.querySelector('input:checked');
+  const explicacao = pergunta.querySelector('.explicacao');
+ 
+  if (!selecionada) return;
+ 
+  feedback.classList.remove('certo', 'errado', 'show');
+ 
+  if (selecionada === correta) {
+    feedback.textContent = "🎉 Boa! Você acertou!";
+    feedback.classList.add('certo', 'show');
+    explicacao.classList.add('show');
+    continuarBtn.style.display = "inline-block";
+    responderBtn.style.display = "none";
+ 
+    if (primeiraTentativa) {
+      acertos++; // Só conta se acertou na primeira tentativa
+    }
+  } else {
+    feedback.textContent = "😅 Opa! Tente novamente.";
+    feedback.classList.add('errado', 'show');
+    primeiraTentativa = false; // Marca que a primeira tentativa foi errada
+  }
+});
+ 
+continuarBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+ 
+  // Limpa classes visuais
+  pergunta.querySelectorAll('label').forEach(label => label.classList.remove('certa', 'errada'));
+ 
+  const explicacao = pergunta.querySelector('.explicacao');
+  if (explicacao) explicacao.classList.remove('show');
+ 
+  pergunta.querySelectorAll('input').forEach(input => input.checked = false);
+  pergunta.classList.remove('active');
+  perguntaAtual++;
+ 
+  // Reseta primeiraTentativa para a próxima pergunta
+  primeiraTentativa = true;
+ 
+  if (perguntaAtual < perguntas.length) {
+    perguntas[perguntaAtual].classList.add('active');
+    responderBtn.style.display = "inline-block";
+    continuarBtn.style.display = "none";
+    feedback.textContent = "";
+    adicionarListenerOpcoes();
+  } else {
+  // Fim do quiz
+  feedback.style.display = "none";
+  responderBtn.style.display = "none";
+  continuarBtn.style.display = "none";
+ 
+  pontuacaoFinal.innerHTML = `Você acertou <strong>${acertos}</strong> de <strong>${perguntas.length}</strong> perguntas de primeira! 👏`;
+ 
+  finalQuiz.style.display = "block";
+ 
+  // ✅ SALVAR NO HISTÓRICO
+  const nomeUsuario = "Atena"; // depois você pode puxar do login
+  const temaFormulario = "Peste Negra"; // muda conforme a página
+ 
+  const dataAtual = new Date();
+  const data = dataAtual.toLocaleDateString();
+  const horario = dataAtual.toLocaleTimeString();
+ 
+  const formulario = {
+    nome: nomeUsuario,
+    temaFormulario: temaFormulario,
+    data: data,
+    horario: horario,
+    acertos: acertos,
+    totalQuestoes: perguntas.length
+  };
+ 
+  let historico = JSON.parse(localStorage.getItem('formularios')) || [];
+  historico.push(formulario);
+  localStorage.setItem('formularios', JSON.stringify(historico));
+ 
+  console.log("✅ Resultado salvo no histórico:", formulario);
+}
+});
+</script>
+ 
+</body>
+</html>
+ 
+ 

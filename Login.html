@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <title>Projeto PRIT</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .login-box {
+     width: 100%;
+    max-width: 1250px;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    background: #ffffff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(30, 50, 90, 0.12);
+    box-sizing: border-box;
+    align-items:center;
+    justify-content: center; 
+    margin-top: 100px;
+    margin-left: 350px;
+
+    }
+  
+      .login-box button {
+        background-color: #6867a8;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+
+      .profile-picture {
+        width: 150px;         /* tamanho maior só para visualização */
+        height: 150px;
+        border-radius: 50%;   /* arredondar */
+        overflow: hidden;
+        margin: 0 auto 20px auto; /* centralizar e dar espaço */
+        border: 2px solid #686768; /* borda opcional para destacar */
+          }
+      .profile-picture img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;  /* preencher o círculo */
+        display: block;     /* remover espaço embaixo da imagem */
+          }
+
+    
+    .profile-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+      margin-left: 750px;
+      margin-top: 150px;
+    }
+
+    .profile-card h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .profile-card p {
+      margin: 0 0 24px;
+      color: #6b7280;
+    }
+
+    .photo-preview {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 24px;
+      overflow: hidden;
+      border: 4px solid #6867a8;
+      border-radius: 50%;
+      background: #e5e7eb;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .choose-button,
+    .save-button {
+      display: block;
+      width: 100%;
+      padding: 13px 18px;
+      border: 0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .choose-button {
+      margin-bottom: 12px;
+      color: #ffffff;
+      background: #6867a8;
+    }
+
+    .choose-button:hover {
+      background: #7b347e;
+      transform: translateY(-1px);
+    }
+
+    .save-button {
+      color: #374151;
+      background: #e5e7eb;
+    }
+
+    .save-button:hover:not(:disabled) {
+      background: #d1d5db;
+      transform: translateY(-1px);
+    }
+
+    .save-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .file-name {
+      min-height: 20px;
+      margin: 16px 0;
+      color: #4b5563;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .message {
+      min-height: 22px;
+      margin: 16px 0 0;
+      color: #15803d;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+    <header class="navbar">
+
+    <a href="inicio.html" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="historico.html">Histórico</a></li>
+            <li><a href="Guia.html">Guia</a></li>
+            <li><a href="perfil.html">Perfil</a></li>
+            <li><a href="contato.html">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+  
+<main class="profile-card">
+    <h1>Foto de perfil</h1>
+    <p>Escolha uma imagem do seu dispositivo.</p>
+
+    <div class="photo-preview">
+      <img
+        id="preview"
+        src="[placehold.co](https://placehold.co/300x300/e5e7eb/6b7280?text=Foto)"
+        alt="Prévia da foto de perfil"
+      >
+    </div>
+
+    <label for="photoInput" class="choose-button">
+      Escolher foto
+    </label>
+
+    <input
+      id="photoInput"
+      class="file-input"
+      type="file"
+      accept="image/png, image/jpeg, image/webp"
+    >
+
+    <p id="fileName" class="file-name">Nenhuma foto selecionada</p>
+
+    <button id="saveButton" class="save-button" type="button" disabled>
+      Salvar foto
+    </button>
+
+    <p id="message" class="message" aria-live="polite"></p>
+  </main>
+
+  <script>
+    const photoInput = document.getElementById("photoInput");
+    const preview = document.getElementById("preview");
+    const fileName = document.getElementById("fileName");
+    const saveButton = document.getElementById("saveButton");
+    const message = document.getElementById("message");
+
+    let selectedFile = null;
+    let previewUrl = null;
+
+    photoInput.addEventListener("change", function () {
+      const file = this.files[0];
+
+      message.textContent = "";
+
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        fileName.textContent = "Selecione um arquivo de imagem válido.";
+        saveButton.disabled = true;
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+
+      if (file.size > maxSize) {
+        fileName.textContent = "A imagem deve ter no máximo 5 MB.";
+        saveButton.disabled = true;
+        this.value = "";
+        return;
+      }
+
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
+      selectedFile = file;
+      previewUrl = URL.createObjectURL(file);
+
+      preview.src = previewUrl;
+      fileName.textContent = file.name;
+      saveButton.disabled = false;
+    });
+
+    saveButton.addEventListener("click", function () {
+      if (!selectedFile) {
+        return;
+      }
+
+      message.textContent = "Foto de perfil selecionada com sucesso!";
+    });
+  </script>
+  <script>
+     // =============================
+    // FUNÇÃO DE LOGIN AUTOMÁTICO
+    // =============================
+
+    // Verifica se já há um login salvo
+    document.addEventListener("DOMContentLoaded", () => {
+      const loginBox = document.querySelector(".login-box");
+      const userNameEl = loginBox.querySelector("p:nth-of-type(1)");
+      const userEmailEl = loginBox.querySelector("p:nth-of-type(2)");
+      const logoutBtn = loginBox.querySelector("button");
+
+      // Se existir dados salvos, exibe
+      const savedUser = localStorage.getItem("userName");
+      const savedEmail = localStorage.getItem("userEmail");
+      const savedPhoto = localStorage.getItem("userPhoto");
+
+      if (savedUser && savedEmail) {
+        userNameEl.textContent = "Usuário: " + savedUser;
+        userEmailEl.textContent = "Email: " + savedEmail;
+        if (savedPhoto) {
+          loginBox.querySelector("img").src = savedPhoto;
+        }
+      } else {
+        // Se não tiver, salva os dados atuais (simula login)
+        const currentName = userNameEl.textContent.replace("Usuário: ", "").trim();
+        const currentEmail = userEmailEl.textContent.replace("Email: ", "").trim();
+        const currentPhoto = loginBox.querySelector("img").src;
+
+        localStorage.setItem("userName", currentName);
+        localStorage.setItem("userEmail", currentEmail);
+        localStorage.setItem("userPhoto", currentPhoto);
+      }
+
+      // Função de logout
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userEmail");
+        localStorage.removeItem("userPhoto");
+        alert("Logout realizado com sucesso!");
+        location.reload();
+      });
+    });
+
+  </script>
+
+</body>
+</html>

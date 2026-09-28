@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+
+  <title>Projeto PRIT</title>
+  <style>
+    /* Imagem */
+    .about-section img {
+      width: 100%;
+      max-width: 900px;
+      height: 900px;
+      border-radius: 12px;
+      display: block;
+    }
+ 
+    /* Título sobre a imagem */
+    .about-section h1 {
+      position: absolute;
+      top: 400px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6); /* fundo preto semi-transparente */
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 2.8rem;
+      font-weight: bold;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #8B5CF6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+ 
+button:hover {
+  transform: scale(1.03);
+  box-shadow: #7C3AED;
+}
+ 
+.question {
+  display: none;
+  border: none;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+ 
+.question.active {
+  display: block;
+  animation: aparecer 0.5s ease;
+}
+ 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #f9fafb;
+  border: 2px solid #e0e0e0;
+  transition: all 0.25s ease;
+  font-size: 15px;
+}
+ 
+/* bolinha do radio customizada */
+.question input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+ 
+/* bolinha interna quando selecionado */
+.question input:checked {
+  border-color: #1B1145;
+  background-color: #1B1145;
+}
+ 
+.question input:checked::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+ 
+/* hover bonito */
+.question label:hover {
+ 
+  background: #8762c48e;
+  border-color: #1b1145;
+  transform: scale(1.01);
+}
+ 
+/* selecionado */
+.question label:has(input:checked) {
+  border-color: #1B1145;
+  background: #e3f2fd;
+}
+ 
+label.certa {
+  background-color: #c8e6c9 !important;
+  border: 2px solid #4caf50;
+}
+ 
+label.errada {
+  background-color: #ffcdd2 !important;
+  border: 2px solid #f44336;
+}
+ 
+#resultado {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+ 
+.hero {
+  position: relative;
+  max-width: 900px;
+  margin: 100px auto 50px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+ 
+.hero-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+ 
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 150px;
+  width: 500px;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+ 
+details summary::marker {
+  content: '';
+}
+.question {
+  display: none;
+}
+ 
+.question.active {
+  display: block;
+}
+#feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* Quando aparece */
+#feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+ 
+/* Certo */
+#feedback.certo {
+  background: linear-gradient(135deg, #c8e6c9, #81c784);
+  color: #1b5e20;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+}
+ 
+/* Errado */
+#feedback.errado {
+  background: linear-gradient(135deg, #ffcdd2, #e57373);
+  color: #b71c1c;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+}
+.explicacao {
+  display: none;
+  margin-top: 15px;
+  padding: 15px 20px;
+  border-left: 6px solid #4CAF50;
+  background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+  border-radius: 10px;
+  font-style: normal;
+  color: #2e7d32;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* quando aparece */
+.explicacao.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+  </style>
+</head>
+<body>
+ 
+ <header class="navbar">
+
+    <a href="#" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="#">Histórico</a></li>
+            <li><a href="#">Guia</a></li>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+  <details style="max-width: 900px; margin: 150px auto 50px; background-color: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+    <summary style="cursor: pointer;">
+      <section class="hero">
+        <img src="UniaoSovietica.png" alt="União Soviética" class="hero-image">
+        <h1 class="hero-text">União Soviética</h1>
+      </section>
+    </summary>
+ 
+    <form style="margin-top: 30px;">
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 2rem; color: #333;">Questionário - União Soviética</h2>
+ 
+      <!-- Cada questão -->
+<fieldset class="question">
+<legend>1) O que deu início à URSS?</legend>
+
+<label>
+<input type="radio" name="q1" value="a">
+<span>a) O enfraquecimento dos países do Leste Europeu e no norte da Ásia após a Segunda Guerra Mundial.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="b">
+<span>b) O governo autoritário de Stalin, que unificou as nações vizinhas de seu território.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q1" value="c">
+<span>c) A Revolução Russa de 1917, que derrubou o Czar Nicolau II e o governo provisório.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="d">
+<span>d) A estabilização do governo provisório que se solidificou como partido após o término da Primeira Guerra Mundial.</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="e">
+<span>e) A União Soviética era um único país que se fragmentou após desavenças político-ideológicas.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A origem da União Soviética está diretamente ligada à Revolução Russa de 1917. Após a queda do regime czarista e do governo provisório, os bolcheviques chegaram ao poder e, em 1922, formaram oficialmente a União das Repúblicas Socialistas Soviéticas (URSS).
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>2) O que foram os planos quinquenais?</legend>
+
+<label>
+<input type="radio" name="q2" value="a">
+<span>a) Metas políticas que visavam estabelecer o governo soviético dentro de cinco anos.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="b">
+<span>b) Metas de recuperar a União Soviética de toda a destruição da Primeira Guerra Mundial dentro de cinco anos.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q2" value="c">
+<span>c) Metas econômicas de cinco anos, focadas na rápida industrialização e coletivização agrícola.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="d">
+<span>d) Plano estabelecido pelo governo provisório que defendia que a URSS deveria ser governada por cinco líderes para evitar a centralização do poder.</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="e">
+<span>e) Meta de Stalin de promover uma evolução de 50 anos em cinco.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+Os planos quinquenais foram programas econômicos implantados por Joseph Stalin para acelerar o desenvolvimento industrial da URSS e reorganizar a agricultura por meio da coletivização das terras.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>3) Quais foram os principais líderes da URSS?</legend>
+
+<label class="correta">
+<input type="radio" name="q3" value="a">
+<span>a) Vladimir Lenin e Joseph Stalin.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="b">
+<span>b) Joseph Stalin e Winston Churchill.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="c">
+<span>c) Winston Churchill e Joseph Stalin.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="d">
+<span>d) Fidel Castro e Franklin D. Roosevelt.</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="e">
+<span>e) Franklin D. Roosevelt e Vladimir Lenin.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+Vladimir Lenin liderou a Revolução Russa e foi o primeiro dirigente do Estado soviético. Após sua morte, Joseph Stalin assumiu o poder e governou a União Soviética por décadas, consolidando um regime altamente centralizado.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>4) A URSS consolidou-se com a união de quantas repúblicas?</legend>
+
+<label>
+<input type="radio" name="q4" value="a">
+<span>a) 54.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="b">
+<span>b) 39.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="c">
+<span>c) 22.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="d">
+<span>d) 28.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q4" value="e">
+<span>e) 15.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+Ao longo de sua história, a União Soviética foi composta por 15 repúblicas socialistas, que formavam um único Estado sob o governo central sediado em Moscou.
+</p>
+</fieldset>
+
+<fieldset class="question">
+<legend>5) A coletivização de terras afetou como a vida da população?</legend>
+
+<label>
+<input type="radio" name="q5" value="a">
+<span>a) Houve pouca resistência de fazendeiros apesar do atrito gerado entre eles e o governo.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q5" value="b">
+<span>b) Fazendeiros que resistiram foram enviados para campos de trabalho e milhões de pessoas morreram de fome.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="c">
+<span>c) Apesar da escassez de alimentos, a população não passou fome porque o governo importou grãos.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="d">
+<span>d) Houve grande revolta inicialmente, mas ela terminou espontaneamente após a melhoria da qualidade de vida da população.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="e">
+<span>e) Milhões de pessoas morreram de fome, mas não houve revolta, pois a população já havia se rendido completamente ao governo.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A coletivização das terras foi uma política implementada por Stalin que obrigava os agricultores a integrarem fazendas coletivas. A medida gerou forte resistência, perseguições, deportações para campos de trabalho e graves crises de fome, especialmente no início da década de 1930.
+</p>
+</fieldset>
+
+   
+   <button type="button" id="responderBtn" style="margin-top: 20px;">Responder</button>
+<button type="button" id="continuarBtn" style="margin-top: 10px; display:none;">Continuar</button>
+<p id="feedback" style="font-weight:bold; margin-top:10px;"></p>
+ 
+<span id="feedback" style="display:block; margin-top:10px; font-weight:bold;"></span>
+ 
+<div id="finalQuiz" style="display:none; text-align:center; margin-top:50px; padding:40px; background: linear-gradient(135deg, #f9f9f9, #e0f7fa); border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width:600px; margin-left:auto; margin-right:auto;">
+  <h2 style="font-size:2.5rem; color:#00796b; margin-bottom:20px;">🎉 Parabéns! 🎉</h2>
+  <p id="pontuacaoFinal" style="font-size:1.2rem; color:#004d40; margin-bottom:30px;">
+    Você concluiu o questionário sobre a <strong>União Soviética</strong>! 👏
+  </p>
+   <button
+    type="button"
+    onclick="window.location.href='inicio.html'"
+    style="padding:15px 30px; font-size:1.2rem; background: linear-gradient(135deg, #BF40FA, #4928C2); color:white; border:none; border-radius:12px; cursor:pointer; transition: all 0.3s ease; font-weight:bold;">
+    Voltar à página inicial
+</button>
+  </a>
+</div>
+ 
+</form>
+   
+ 
+ 
+<div id="resultado"></div>
+ 
+<script>
+let perguntaAtual = 0;
+let acertos = 0; // Contador de acertos
+let primeiraTentativa = true; // Para saber se é a primeira tentativa
+ 
+const perguntas = document.querySelectorAll('.question');
+const responderBtn = document.getElementById('responderBtn');
+const continuarBtn = document.getElementById('continuarBtn');
+const feedback = document.getElementById('feedback');
+const finalQuiz = document.getElementById('finalQuiz');
+const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+ 
+perguntas[0].classList.add('active');
+ 
+function checarSelecao() {
+  const selecionada = perguntas[perguntaAtual].querySelector('input:checked');
+  responderBtn.disabled = !selecionada;
+}
+ 
+function adicionarListenerOpcoes() {
+  const inputs = perguntas[perguntaAtual].querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('change', checarSelecao);
+  });
+}
+ 
+adicionarListenerOpcoes();
+ 
+responderBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+  const correta = pergunta.querySelector('label.correta input');
+  const selecionada = pergunta.querySelector('input:checked');
+  const explicacao = pergunta.querySelector('.explicacao');
+ 
+  if (!selecionada) return;
+ 
+  feedback.classList.remove('certo', 'errado', 'show');
+ 
+  if (selecionada === correta) {
+    feedback.textContent = "🎉 Boa! Você acertou!";
+    feedback.classList.add('certo', 'show');
+    explicacao.classList.add('show');
+    continuarBtn.style.display = "inline-block";
+    responderBtn.style.display = "none";
+ 
+    if (primeiraTentativa) {
+      acertos++; // Só conta se acertou na primeira tentativa
+    }
+  } else {
+    feedback.textContent = "😅 Opa! Tente novamente.";
+    feedback.classList.add('errado', 'show');
+    primeiraTentativa = false; // Marca que a primeira tentativa foi errada
+  }
+});
+ 
+continuarBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+ 
+  // Limpa classes visuais
+  pergunta.querySelectorAll('label').forEach(label => label.classList.remove('certa', 'errada'));
+ 
+  const explicacao = pergunta.querySelector('.explicacao');
+  if (explicacao) explicacao.classList.remove('show');
+ 
+  pergunta.querySelectorAll('input').forEach(input => input.checked = false);
+  pergunta.classList.remove('active');
+  perguntaAtual++;
+ 
+  // Reseta primeiraTentativa para a próxima pergunta
+  primeiraTentativa = true;
+ 
+  if (perguntaAtual < perguntas.length) {
+    perguntas[perguntaAtual].classList.add('active');
+    responderBtn.style.display = "inline-block";
+    continuarBtn.style.display = "none";
+    feedback.textContent = "";
+    adicionarListenerOpcoes();
+  } else {
+  // Fim do quiz
+  feedback.style.display = "none";
+  responderBtn.style.display = "none";
+  continuarBtn.style.display = "none";
+ 
+  pontuacaoFinal.innerHTML = `Você acertou <strong>${acertos}</strong> de <strong>${perguntas.length}</strong> perguntas de primeira! 👏`;
+ 
+  finalQuiz.style.display = "block";
+ 
+  // ✅ SALVAR NO HISTÓRICO
+  const nomeUsuario = "Atena"; // depois você pode puxar do login
+  const temaFormulario = "Bomba Atômica"; // muda conforme a página
+ 
+  const dataAtual = new Date();
+  const data = dataAtual.toLocaleDateString();
+  const horario = dataAtual.toLocaleTimeString();
+ 
+  const formulario = {
+    nome: nomeUsuario,
+    temaFormulario: temaFormulario,
+    data: data,
+    horario: horario,
+    acertos: acertos,
+    totalQuestoes: perguntas.length
+  };
+ 
+  let historico = JSON.parse(localStorage.getItem('formularios')) || [];
+  historico.push(formulario);
+  localStorage.setItem('formularios', JSON.stringify(historico));
+ 
+  console.log("✅ Resultado salvo no histórico:", formulario);
+}
+});
+</script>
+ 
+</body>
+</html>
+ 
+ 

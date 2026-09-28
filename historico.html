@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atena</title>
+    <link rel="stylesheet" href="style.css">
+
+  <style>
+    html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content{
+    width:90%;
+    max-width:1200px;
+    margin:60px auto;
+}
+
+.historico-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 15px 35px rgba(0,0,0,.15);
+}
+   h2{
+    color:#fff;
+    font-size:52px;
+    margin-bottom:35px;
+}
+
+   table {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+
+   th{
+    background:#5B5BAA;
+    color:white;
+    font-size:16px;
+    font-weight:600;
+    padding:18px;
+}
+  td{
+    padding:18px;
+    color:#444;
+  }
+
+  tbody tr{
+    transition:.2s;
+  }
+
+  tbody tr:hover{
+    background:#f3f4fa;
+  }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+  .acoes {
+    text-align: center;
+    margin: 30px 0;
+}
+
+#limparHistorico{
+    background:#d32f2f;
+    color:white;
+    padding:14px 28px;
+    font-size:15px;
+    font-weight:600;
+    border-radius:10px;
+    transition:.25s;
+}
+
+#limparHistorico:hover{
+    transform:translateY(-2px);
+    background:#b71c1c;
+}
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+
+    <a href="#" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="historico.html">Histórico</a></li>
+            <li><a href="Guia.html">Guia</a></li>
+            <li><a href="perfil.html">Perfil</a></li>
+            <li><a href="contato.html">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+
+  <div class="content">
+     <br><br><h2>Histórico</h2><br>
+     <div class="historico-card">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome do Usuário</th>
+          <th>Tema do Formulário</th>
+          <th>Data e Horário</th>
+          <th>Acertos</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-historico"></tbody>
+    </table>
+  </div>
+<script>
+    const tabela = document.getElementById('tabela-historico');
+    const historico = JSON.parse(localStorage.getItem('formularios')) || [];
+
+    if (historico.length === 0) {
+      tabela.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenhum formulário foi respondido até o momento.</td></tr>`;
+    } else {
+      historico.forEach(item => {
+        // 🔹 Espera que o objeto no localStorage tenha:
+        // nome, temaFormulario, data, horario, acertos e totalQuestoes (opcional)
+        const linha = `
+          <tr>
+            <td>${item.nome}</td>
+            <td>${item.temaFormulario}</td>
+            <td>${item.data} ${item.horario}</td>
+            <td>${item.acertos} / ${item.totalQuestoes || '-'}</td>
+          </tr>`;
+        tabela.innerHTML += linha;
+      });
+    }
+
+    // 🔹 Botão para limpar histórico
+    document.getElementById('limparHistorico').addEventListener('click', () => {
+      if (confirm("Tem certeza que deseja limpar todo o histórico?")) {
+        localStorage.removeItem('formularios');
+        tabela.innerHTML = `<tr><td colspan="4" style="text-align:center;">Nenhum formulário foi respondido até o momento.</td></tr>`;
+        alert("Histórico apagado com sucesso!");
+      }
+    });
+    
+  </script>
+      <br><br>
+      <div class="acoes">
+      <button id="limparHistorico">Limpar Histórico</button>
+      </div>
+    </div>
+  </div>
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-logo">
+            <h2>ATENA</h2>
+            <p>Aprendendo História de forma interativa.</p>
+        </div>
+
+        <div class="footer-links">
+            <h3>Navegação</h3>
+            <a href="inicio.html">Início</a>
+            <a href="historico.html">Histórico</a>
+            <a href="Guia.html">Guia</a>
+            <a href="contato.html">Contato</a>
+        </div>
+
+        <div class="footer-info">
+            <h3>Projeto</h3>
+            <p>Plataforma educacional voltada ao ensino de História.</p>
+            <p>© 2025 ATENA</p>
+        </div>
+
+    </div>
+</footer>
+</body>
+</html>

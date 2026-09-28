@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+
+  <title>Projeto PRIT</title>
+  <style>
+    /* Imagem */
+    .about-section img {
+      width: 100%;
+      max-width: 900px;
+      height: 900px;
+      border-radius: 12px;
+      display: block;
+    }
+ 
+    /* Título sobre a imagem */
+    .about-section h1 {
+      position: absolute;
+      top: 400px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.6); /* fundo preto semi-transparente */
+      color: #fff;
+      padding: 20px 40px;
+      border-radius: 10px;
+      font-size: 2.8rem;
+      font-weight: bold;
+      max-width: 90%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #1B1145, #1B1145);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+ 
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(33,150,243,0.3);
+}
+ 
+.question {
+  display: none;
+  border: none;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+ 
+.question.active {
+  display: block;
+  animation: aparecer 0.5s ease;
+}
+ 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.question label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #f9fafb;
+  border: 2px solid #e0e0e0;
+  transition: all 0.25s ease;
+  font-size: 15px;
+}
+ 
+/* bolinha do radio customizada */
+.question input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #999;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
+ 
+/* bolinha interna quando selecionado */
+.question input:checked {
+  border-color: #1B1145;
+  background-color: #1B1145;
+}
+ 
+.question input:checked::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+ 
+/* hover bonito */
+.question label:hover {
+ 
+  background: #8762c48e;
+  border-color: #1b1145;
+  transform: scale(1.01);
+}
+ 
+/* selecionado */
+.question label:has(input:checked) {
+  border-color: #1B1145;
+  background: #e3f2fd;
+}
+ 
+label.certa {
+  background-color: #c8e6c9 !important;
+  border: 2px solid #4caf50;
+}
+ 
+label.errada {
+  background-color: #ffcdd2 !important;
+  border: 2px solid #f44336;
+}
+ 
+#resultado {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #333;
+}
+ 
+.hero {
+  position: relative;
+  max-width: 900px;
+  margin: 100px auto 50px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+ 
+.hero-image {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+ 
+.hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  margin-top: 150px;
+  width: 500px;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+ 
+details summary::marker {
+  content: '';
+}
+.question {
+  display: none;
+}
+ 
+.question.active {
+  display: block;
+}
+#feedback {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* Quando aparece */
+#feedback.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+ 
+/* Certo */
+#feedback.certo {
+  background: linear-gradient(135deg, #c8e6c9, #81c784);
+  color: #1b5e20;
+  box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+}
+ 
+/* Errado */
+#feedback.errado {
+  background: linear-gradient(135deg, #ffcdd2, #e57373);
+  color: #b71c1c;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+}
+.explicacao {
+  display: none;
+  margin-top: 15px;
+  padding: 15px 20px;
+  border-left: 6px solid #4CAF50;
+  background: linear-gradient(135deg, #f1f8e9, #dcedc8);
+  border-radius: 10px;
+  font-style: normal;
+  color: #2e7d32;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.4s ease;
+}
+ 
+/* quando aparece */
+.explicacao.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+  </style>
+</head>
+<body>
+ 
+  <header class="navbar">
+
+    <a href="#" class="logo">ATENA</a>
+
+    <nav>
+
+        <ul>
+
+            <li><a href="inicio.html">Início</a></li>
+            <li><a href="#">Histórico</a></li>
+            <li><a href="#">Guia</a></li>
+            <li><a href="#">Perfil</a></li>
+            <li><a href="#">Contato</a></li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+  <details style="max-width: 1400px; margin: 100px auto 50px; background-color: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+    <summary style="cursor: pointer;">
+      <section class="hero">
+        <img src="pesteNegra.webp" alt="Peste Negra" class="hero-image">
+        <h1 class="hero-text">Peste Negra</h1>
+      </section>
+    </summary>
+ 
+    <form style="margin-top: 30px;">
+      <h2 style="text-align: center; margin-bottom: 25px; font-size: 2rem; color: #333;">Questionário - Peste Negra</h2>
+ 
+      <!-- Cada questão -->
+    <fieldset class="question">
+      
+<legend>1) A Peste Negra é causada por qual bactéria?</legend>
+
+<label>
+<input type="radio" name="q1" value="a">
+<span>a) Helicobacter pneumoniae</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="b">
+<span>b) Salmonella enterica</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="c">
+<span>c) Streptococcus pneumoniae</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q1" value="d">
+<span>d) Yersinia pestis</span>
+</label>
+
+<label>
+<input type="radio" name="q1" value="e">
+<span>e) Escherichia coli</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A Peste Negra é causada pela bactéria <strong>Yersinia pestis</strong>, transmitida principalmente por pulgas que vivem em roedores infectados.
+</p>
+
+</fieldset>
+
+<!-- QUESTÃO 2 -->
+
+<fieldset class="question">
+<legend>2) A doença teve contato com os europeus por meio de um conflito que aconteceu em...</legend>
+
+<label>
+<input type="radio" name="q2" value="a">
+<span>a) Córsega</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q2" value="b">
+<span>b) Caffa</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="c">
+<span>c) Azov</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="d">
+<span>d) Donbass</span>
+</label>
+
+<label>
+<input type="radio" name="q2" value="e">
+<span>e) Constantinopla</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A peste chegou aos europeus após o Cerco de Caffa (1346), quando navios mercantes transportaram pessoas e ratos infectados para a Europa.
+</p>
+
+</fieldset>
+
+<!-- QUESTÃO 3 -->
+
+<fieldset class="question">
+<legend>3) Qual dos escritores abaixo deixou relatos do que presenciou da Peste Negra em Florença?</legend>
+
+<label class="correta">
+<input type="radio" name="q3" value="a">
+<span>a) Giovanni Boccaccio</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="b">
+<span>b) Dante Alighieri</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="c">
+<span>c) Afonso Sanches</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="d">
+<span>d) Geoffroi de Charny</span>
+</label>
+
+<label>
+<input type="radio" name="q3" value="e">
+<span>e) Francesco Petrarca</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+Giovanni Boccaccio descreveu os efeitos da epidemia em Florença na obra <em>Decameron</em>, um dos principais relatos históricos da Peste Negra.
+</p>
+
+</fieldset>
+
+<!-- QUESTÃO 4 -->
+
+<fieldset class="question">
+<legend>4) Atualmente a peste bubônica foi erradicada?</legend>
+
+<label>
+<input type="radio" name="q4" value="a">
+<span>a) Não, pois ainda há pequenos surtos da doença em todo o mundo.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="b">
+<span>b) Não, pois por ser transmitida por pulgas não é possível ter total controle.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="c">
+<span>c) Sim, pois não há casos registrados desde o século XIX.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q4" value="d">
+<span>d) Não, mas é rara e tratável com antibióticos.</span>
+</label>
+
+<label>
+<input type="radio" name="q4" value="e">
+<span>e) Sim, já que a taxa de contaminação desapareceu completamente.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A peste ainda existe em alguns países, porém é rara e, quando diagnosticada rapidamente, pode ser tratada com antibióticos.
+</p>
+
+</fieldset>
+
+<!-- QUESTÃO 5 -->
+
+<fieldset class="question">
+<legend>5) Como ocorre a transmissão da Peste Negra?</legend>
+
+<label>
+<input type="radio" name="q5" value="a">
+<span>a) Através de contato direto com a pessoa infectada.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="b">
+<span>b) Exclusivamente pela picada da pulga de rato.</span>
+</label>
+
+<label class="correta">
+<input type="radio" name="q5" value="c">
+<span>c) Inicialmente pela picada de pulgas infectadas e, em casos de peste pneumônica, também pode ocorrer transmissão pelo ar.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="d">
+<span>d) Exclusivamente de pessoa para pessoa.</span>
+</label>
+
+<label>
+<input type="radio" name="q5" value="e">
+<span>e) Ainda não se sabe ao certo como ocorre a transmissão.</span>
+</label>
+
+<p class="explicacao">
+💡 <strong>Explicação:</strong><br><br>
+A forma mais comum de transmissão ocorre pela picada de pulgas infectadas. Na forma pneumônica, a doença também pode ser transmitida entre pessoas por gotículas respiratórias.
+</p>
+
+</fieldset>
+   
+   <button type="button" id="responderBtn" style="margin-top: 20px;">Responder</button>
+<button type="button" id="continuarBtn" style="margin-top: 10px; display:none;">Continuar</button>
+<p id="feedback" style="font-weight:bold; margin-top:10px;"></p>
+ 
+<span style="display:block; margin-top:10px; font-weight:bold;"></span>
+ 
+<div id="finalQuiz" style="display:none; text-align:center; margin-top:50px; padding:40px; background: linear-gradient(135deg, #f9f9f9, #e0f7fa); border-radius:20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width:600px; margin-left:auto; margin-right:auto;">
+  <h2 style="font-size:2.5rem; color:#00796b; margin-bottom:20px;">🎉 Parabéns! 🎉</h2>
+  <p id="pontuacaoFinal" style="font-size:1.2rem; color:#004d40; margin-bottom:30px;">
+    Você concluiu o questionário sobre a <strong>Peste negra</strong>! 👏
+  </p>
+   <button
+    type="button"
+    onclick="window.location.href='inicio.html'"
+    style="padding:15px 30px; font-size:1.2rem; background: linear-gradient(135deg, #BF40FA, #4928C2); color:white; border:none; border-radius:12px; cursor:pointer; transition: all 0.3s ease; font-weight:bold;">
+    Voltar à página inicial
+</button>
+  </a>
+</div>
+ 
+</form>
+   
+ 
+ 
+<div id="resultado"></div>
+ 
+<script>
+let perguntaAtual = 0;
+
+function atualizarProgresso(){
+
+    const total = perguntas.length;
+    const atual = perguntaAtual + 1;
+
+    const porcentagem = (atual / total) * 100;
+
+    document.querySelectorAll(".progress-circle").forEach(c=>{
+        c.style.setProperty("--progress", porcentagem);
+    });
+
+    document.querySelectorAll("#contador").forEach(c=>{
+        c.textContent = `${atual}/${total}`;
+    });
+
+    document.querySelectorAll("#questaoAtual").forEach(c=>{
+        c.textContent = atual;
+    });
+
+}
+
+
+
+let acertos = 0; // Contador de acertos
+let primeiraTentativa = true; // Para saber se é a primeira tentativa
+ 
+const perguntas = document.querySelectorAll('.question');
+const responderBtn = document.getElementById('responderBtn');
+const continuarBtn = document.getElementById('continuarBtn');
+const feedback = document.getElementById('feedback');
+const finalQuiz = document.getElementById('finalQuiz');
+const pontuacaoFinal = document.getElementById('pontuacaoFinal');
+ 
+perguntas[0].classList.add('active');
+ 
+function checarSelecao() {
+  const selecionada = perguntas[perguntaAtual].querySelector('input:checked');
+  responderBtn.disabled = !selecionada;
+}
+ 
+function adicionarListenerOpcoes() {
+  const inputs = perguntas[perguntaAtual].querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('change', checarSelecao);
+  });
+}
+ 
+adicionarListenerOpcoes();
+ 
+responderBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+  const correta = pergunta.querySelector('label.correta input');
+  const selecionada = pergunta.querySelector('input:checked');
+  const explicacao = pergunta.querySelector('.explicacao');
+ 
+  if (!selecionada) return;
+ 
+  feedback.classList.remove('certo', 'errado', 'show');
+ 
+  if (selecionada === correta) {
+    feedback.textContent = "🎉 Boa! Você acertou!";
+    feedback.classList.add('certo', 'show');
+    explicacao.classList.add('show');
+    continuarBtn.style.display = "inline-block";
+    responderBtn.style.display = "none";
+ 
+    if (primeiraTentativa) {
+      acertos++; // Só conta se acertou na primeira tentativa
+    }
+  } else {
+    feedback.textContent = "😅 Opa! Tente novamente.";
+    feedback.classList.add('errado', 'show');
+    primeiraTentativa = false; // Marca que a primeira tentativa foi errada
+  }
+});
+ 
+continuarBtn.addEventListener('click', () => {
+  const pergunta = perguntas[perguntaAtual];
+ 
+  // Limpa classes visuais
+  pergunta.querySelectorAll('label').forEach(label => label.classList.remove('certa', 'errada'));
+ 
+  const explicacao = pergunta.querySelector('.explicacao');
+  if (explicacao) explicacao.classList.remove('show');
+ 
+  pergunta.querySelectorAll('input').forEach(input => input.checked = false);
+  pergunta.classList.remove('active');
+  perguntaAtual++;
+ 
+  // Reseta primeiraTentativa para a próxima pergunta
+  primeiraTentativa = true;
+ 
+  if (perguntaAtual < perguntas.length) {
+    perguntas[perguntaAtual].classList.add('active');
+    responderBtn.style.display = "inline-block";
+    continuarBtn.style.display = "none";
+    feedback.textContent = "";
+    adicionarListenerOpcoes();
+  } else {
+  // Fim do quiz
+  feedback.style.display = "none";
+  responderBtn.style.display = "none";
+  continuarBtn.style.display = "none";
+ 
+  pontuacaoFinal.innerHTML = `Você acertou <strong>${acertos}</strong> de <strong>${perguntas.length}</strong> perguntas de primeira! 👏`;
+ 
+  finalQuiz.style.display = "block";
+ 
+  // ✅ SALVAR NO HISTÓRICO
+  const nomeUsuario = "Atena"; // depois você pode puxar do login
+  const temaFormulario = "Peste Negra"; // muda conforme a página
+ 
+  const dataAtual = new Date();
+  const data = dataAtual.toLocaleDateString();
+  const horario = dataAtual.toLocaleTimeString();
+ 
+  const formulario = {
+    nome: nomeUsuario,
+    temaFormulario: temaFormulario,
+    data: data,
+    horario: horario,
+    acertos: acertos,
+    totalQuestoes: perguntas.length
+  };
+ 
+  let historico = JSON.parse(localStorage.getItem('formularios')) || [];
+  historico.push(formulario);
+  localStorage.setItem('formularios', JSON.stringify(historico));
+ 
+  console.log("✅ Resultado salvo no histórico:", formulario);
+}
+});
+</script>
+ 
+</body>
+</html>
+ 
+ 
